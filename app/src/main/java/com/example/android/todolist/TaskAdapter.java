@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.todolist.data.TaskEntry;
+import com.example.android.todolist.database.TaskEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-import com.example.android.todolist.data.TaskEntry;
+import com.example.android.todolist.database.TaskEntry;
 
 public class AddTaskActivity extends AppCompatActivity {
 
