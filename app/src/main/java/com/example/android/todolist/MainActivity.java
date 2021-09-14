@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.android.todolist.database.AppDatabase;
+import com.example.android.todolist.database.TaskEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener {
 
@@ -82,7 +85,21 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     protected void onResume() {
         super.onResume();
 
-        mAdapter.setTasks(mDb.taskDao().loadAllTasks());
+        //AppExecutors instance to run on background thread
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<TaskEntry> tasks = mDb.taskDao().loadAllTasks();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setTasks(tasks);
+                    }
+                });
+
+            }
+        });
     }
 
     @Override

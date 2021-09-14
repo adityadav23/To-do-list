@@ -103,10 +103,18 @@ public class AddTaskActivity extends AppCompatActivity {
 
         //Using constructor from TaskEntry
         TaskEntry taskEntry = new TaskEntry(description , priority, date);
-        //inserting taskEntry into table
-        mDb.taskDao().insertTask(taskEntry);
-        //finish to move to parent activity
-        finish();
+
+        //Using AppExecutor to run insert on different thread
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                //inserting taskEntry into table
+                mDb.taskDao().insertTask(taskEntry);
+                //finish to move to parent activity
+                finish();
+            }
+        });
+
     }
 
     /**
