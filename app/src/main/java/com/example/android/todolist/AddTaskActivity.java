@@ -52,7 +52,21 @@ public class AddTaskActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
             mButton.setText(R.string.update_button);
             if (mTaskId == DEFAULT_TASK_ID) {
-                // populate the UI
+                mTaskId = intent.getIntExtra(EXTRA_TASK_ID,DEFAULT_TASK_ID);
+
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        TaskEntry task = mDb.taskDao().loadTaskById(mTaskId);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                populateUI(task);
+                            }
+                        });
+                    }
+                });
             }
         }
 
@@ -88,6 +102,11 @@ public class AddTaskActivity extends AppCompatActivity {
      */
     private void populateUI(TaskEntry task) {
 
+        if(task== null){
+            return ;
+        }
+        mEditText.setText(task.getDescription());
+        setPriorityInViews(task.getPriority());
     }
 
     /**
@@ -102,14 +121,19 @@ public class AddTaskActivity extends AppCompatActivity {
         Date date = new Date();
 
         //Using constructor from TaskEntry
-        TaskEntry taskEntry = new TaskEntry(description , priority, date);
+        final TaskEntry task = new TaskEntry(description , priority, date);
 
         //Using AppExecutor to run insert on different thread
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                //inserting taskEntry into table
-                mDb.taskDao().insertTask(taskEntry);
+                if(mTaskId == DEFAULT_TASK_ID) {//inserting taskEntry into table
+                    mDb.taskDao().insertTask(task);
+                }else {
+                    //update task
+                    task.setId(mTaskId);
+                    mDb.taskDao().updateTask(task);
+                }
                 //finish to move to parent activity
                 finish();
             }
