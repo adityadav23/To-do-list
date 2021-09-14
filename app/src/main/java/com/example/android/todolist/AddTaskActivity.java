@@ -45,6 +45,8 @@ public class AddTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_task);
 
         initViews();
+        mDb = AppDatabase.getInstance(getApplicationContext());
+
 
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_TASK_ID)) {
             mTaskId = savedInstanceState.getInt(INSTANCE_TASK_ID, DEFAULT_TASK_ID);
@@ -67,7 +69,6 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         }
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
     }
 
     @Override
