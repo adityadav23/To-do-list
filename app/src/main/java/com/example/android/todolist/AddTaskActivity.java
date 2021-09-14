@@ -127,7 +127,8 @@ public class AddTaskActivity extends AppCompatActivity {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                if(mTaskId == DEFAULT_TASK_ID) {//inserting taskEntry into table
+                if(mTaskId == DEFAULT_TASK_ID) {
+                    //inserting taskEntry into table
                     mDb.taskDao().insertTask(task);
                 }else {
                     //update task
