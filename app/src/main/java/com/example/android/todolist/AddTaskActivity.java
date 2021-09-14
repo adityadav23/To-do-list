@@ -52,12 +52,12 @@ public class AddTaskActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
             mButton.setText(R.string.update_button);
             if (mTaskId == DEFAULT_TASK_ID) {
-                mTaskId = intent.getIntExtra(EXTRA_TASK_ID,DEFAULT_TASK_ID);
+                mTaskId = intent.getIntExtra(EXTRA_TASK_ID , DEFAULT_TASK_ID);
 
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        TaskEntry task = mDb.taskDao().loadTaskById(mTaskId);
+                       final TaskEntry task = mDb.taskDao().loadTaskById(mTaskId);
 
                         runOnUiThread(new Runnable() {
                             @Override
